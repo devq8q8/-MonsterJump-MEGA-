@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>WA Store Pro | نظام متجر واتساب المتكامل</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --g:#25D366;--gd:#128C7E;
+  --bg:#060e09;--bg2:#0b1610;--bg3:#101c13;
+  --sf:#152019;--sf2:#1a2820;
+  --bd:#1f2e24;--bd2:#273831;
+  --tx:#e0f0e6;--tx2:#6b9e79;--tx3:#3a5e47;
+  --red:#ff4d6d;--gold:#f0c040;--blue:#4d9eff;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Cairo',sans-serif;background:var(--bg);color:var(--tx);min-height:100vh;overflow-x:hidden}
+body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse at 15% 15%,rgba(37,211,102,.05) 0,transparent 55%),radial-gradient(ellipse at 85% 85%,rgba(18,140,126,.04) 0,transparent 55%);pointer-events:none;z-index:0}
+.topbar{position:sticky;top:0;z-index:200;background:rgba(6,14,9,.96);backdrop-filter:blur(20px);border-bottom:1px solid var(--bd);height:56px;display:flex;align-items:center;padding:0 1.25rem;gap:0}
+.brand{display:flex;align-items:center;gap:.55rem;font-size:1rem;font-weight:900;color:var(--g);padding-left:1.75rem;border-left:1px solid var(--bd);margin-left:.5rem;white-space:nowrap}
+.brand-ico{width:32px;height:32px;background:linear-gradient(135deg,var(--g),var(--gd));border-radius:8px;display:grid;place-items:center;font-size:.9rem;box-shadow:0 0 14px rgba(37,211,102,.3)}
+.tabs{display:flex;flex:1;overflow-x:auto}
+.tab{display:flex;align-items:center;gap:.4rem;padding:0 .9rem;height:56px;cursor:pointer;font-size:.78rem;font-weight:600;color:var(--tx3);border-bottom:2px solid transparent;transition:all .18s;white-space:nowrap;flex-shrink:0}
+.tab:hover{color:var(--tx2)}.tab.active{color:var(--g);border-bottom-color:var(--g);background:rgba(37,211,102,.06)}
+.topbar-end{display:flex;align-items:center;gap:.7rem}
+.live{display:flex;align-items:center;gap:.35rem;background:rgba(37,211,102,.1);border:1px solid rgba(37,211,102,.25);color:var(--g);padding:.22rem .7rem;border-radius:100px;font-size:.7rem;font-weight:700}
+.dot{width:6px;height:6px;border-radius:50%;background:var(--g);animation:bl 2s infinite}
+@keyframes bl{0%,100%{opacity:1}50%{opacity:.25}}
+.page{display:none;padding:1.5rem;position:relative;z-index:1;animation:fi .22s ease}
+.page.active{display:block}
+@keyframes fi{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:1.1rem}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1.1rem}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:.9rem}
+.card{background:var(--sf);border:1px solid var(--bd);border-radius:15px;padding:1.4rem}
+.card h3{font-size:.88rem;font-weight:700;color:var(--tx2);margin-bottom:1rem;display:flex;align-items:center;gap:.4rem}
+.stat{background:var(--sf);border:1px solid var(--bd);border-radius:14px;padding:1.15rem 1.4rem;position:relative;overflow:hidden;transition:all .2s}
+.stat:hover{border-color:rgba(37,211,102,.3);transform:translateY(-2px)}
+.stat::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(37,211,102,.035),transparent 60%);pointer-events:none}
+.stat-n{font-size:.68rem;font-weight:700;color:var(--tx3);text-transform:uppercase;letter-spacing:.09em;margin-bottom:.45rem}
+.stat-v{font-size:1.9rem;font-weight:900;line-height:1}
+.stat-sub{font-size:.7rem;color:var(--tx2);margin-top:.3rem}
+.stat-ico{position:absolute;top:.9rem;left:.9rem;font-size:1.5rem;opacity:.1}
+.btn{display:inline-flex;align-items:center;gap:.4rem;padding:.58rem 1.2rem;border-radius:9px;border:none;cursor:pointer;font-family:'Cairo',sans-serif;font-size:.82rem;font-weight:700;transition:all .18s}
+.btn-p{background:linear-gradient(135deg,var(--g),var(--gd));color:#000;box-shadow:0 4px 14px rgba(37,211,102,.22)}
+.btn-p:hover{transform:translateY(-1px);box-shadow:0 6px 22px rgba(37,211,102,.38)}
+.btn-d{background:rgba(255,77,109,.1);color:var(--red);border:1px solid rgba(255,77,109,.18)}
+.btn-d:hover{background:rgba(255,77,109,.2)}
+.btn-g{background:var(--sf2);color:var(--tx2);border:1px solid var(--bd2)}
+.btn-g:hover{color:var(--tx)}
+.btn-b{background:rgba(77,158,255,.1);color:var(--blue);border:1px solid rgba(77,158,255,.2)}
+.btn-sm{padding:.32rem .75rem;font-size:.74rem;border-radius:8px}
+.btn-xs{padding:.22rem .55rem;font-size:.68rem;border-radius:6px}
+.frow{display:grid;grid-template-columns:1fr 1fr;gap:.9rem}
+.fg{display:flex;flex-direction:column;gap:.3rem;margin-bottom:.8rem}
+.fg.full{grid-column:span 2}
+label{font-size:.74rem;font-weight:600;color:var(--tx2)}
+input,textarea,select{background:var(--bg3);border:1px solid var(--bd2);border-radius:8px;padding:.6rem .9rem;color:var(--tx);font-family:'Cairo',sans-serif;font-size:.83rem;outline:none;transition:border-color .2s,box-shadow .2s;width:100%}
+input:focus,textarea:focus,select:focus{border-color:var(--g);box-shadow:0 0 0 3px rgba(37,211,102,.09)}
+textarea{resize:vertical;min-height:72px}
+select option{background:var(--bg3)}
+.form-act{display:flex;gap:.65rem;justify-content:flex-end;margin-top:.9rem}
+.twrap{background:var(--sf);border:1px solid var(--bd);border-radius:15px;overflow:hidden}
+.ttop{display:flex;align-items:center;gap:.75rem;padding:.85rem 1.2rem;border-bottom:1px solid var(--bd)}
+.sbox{flex:1;display:flex;align-items:center;gap:.4rem;background:var(--bg3);border:1px solid var(--bd2);border-radius:8px;padding:.42rem .85rem}
+.sbox input{background:none;border:none;padding:0}
+table{width:100%;border-collapse:collapse}
+th{text-align:right;padding:.75rem 1.2rem;font-size:.65rem;font-weight:800;color:var(--tx3);text-transform:uppercase;letter-spacing:.1em;border-bottom:1px solid var(--bd)}
+td{padding:.82rem 1.2rem;font-size:.82rem;border-bottom:1px solid rgba(31,46,36,.7)}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:var(--bg3)}
+.pcel{display:flex;align-items:center;gap:.7rem}
+.pemo{width:34px;height:34px;background:var(--sf2);border:1px solid var(--bd2);border-radius:8px;display:grid;place-items:center;font-size:1rem}
+.pnm{font-weight:700;font-size:.84rem}.pid{font-size:.68rem;color:var(--tx3);font-family:monospace}
+.ptag{background:rgba(37,211,102,.09);border:1px solid rgba(37,211,102,.18);color:var(--g);padding:.18rem .6rem;border-radius:100px;font-weight:700;font-size:.78rem;display:inline-block}
+.gtag{background:rgba(240,192,64,.08);border:1px solid rgba(240,192,64,.18);color:var(--gold);padding:.18rem .6rem;border-radius:100px;font-size:.72rem;font-weight:700}
+.act-col{display:flex;gap:.38rem;flex-wrap:wrap}
+.empty-s{text-align:center;padding:2.5rem;color:var(--tx3)}
+.empty-s .ei{font-size:2.2rem;margin-bottom:.65rem}
+.tog{display:flex;align-items:center;gap:.65rem}
+.tog-tr{width:42px;height:22px;background:var(--bd2);border-radius:100px;cursor:pointer;transition:background .2s;position:relative;flex-shrink:0}
+.tog-tr.on{background:var(--g)}
+.tog-th{position:absolute;top:3px;right:3px;width:16px;height:16px;background:#fff;border-radius:50%;transition:transform .2s;box-shadow:0 1px 4px rgba(0,0,0,.3)}
+.tog-tr.on .tog-th{transform:translateX(-20px)}
+.tog-l{font-size:.8rem;font-weight:600;color:var(--tx2)}
+.chat-wrap{border:1px solid var(--bd);border-radius:15px;overflow:hidden;display:flex;flex-direction:column;height:490px}
+.chat-hdr{background:linear-gradient(135deg,var(--gd),#0a6b60);padding:.85rem 1.15rem;display:flex;align-items:center;gap:.8rem}
+.chat-av{width:36px;height:36px;background:rgba(255,255,255,.18);border-radius:50%;display:grid;place-items:center;font-size:1rem}
+.chat-avi h4{font-size:.85rem;font-weight:700}.chat-avi p{font-size:.68rem;opacity:.75}
+.chat-msgs{flex:1;overflow-y:auto;padding:.9rem;background:#050d07;display:flex;flex-direction:column;gap:.6rem}
+.msg{display:flex;flex-direction:column;max-width:78%}
+.msg.s{align-self:flex-end;align-items:flex-end}
+.msg.r{align-self:flex-start;align-items:flex-start}
+.bbl{padding:.52rem .9rem;border-radius:11px;font-size:.8rem;line-height:1.65;white-space:pre-wrap}
+.msg.s .bbl{background:#005c4b;border-bottom-left-radius:3px}
+.msg.r .bbl{background:var(--sf2);border-bottom-right-radius:3px}
+.mt{font-size:.6rem;color:var(--tx3);margin-top:.18rem}
+.chat-foot{background:var(--sf);border-top:1px solid var(--bd);padding:.65rem .85rem;display:flex;gap:.6rem;align-items:center}
+.chat-foot input{flex:1;border-radius:100px;padding:.5rem .9rem}
+.sbtn{width:36px;height:36px;background:var(--g);border:none;border-radius:50%;display:grid;place-items:center;cursor:pointer;color:#000;font-size:.9rem;transition:transform .18s;flex-shrink:0}
+.sbtn:hover{transform:scale(1.1)}
+.bset{display:flex;align-items:center;justify-content:space-between;padding:.8rem 0;border-bottom:1px solid var(--bd)}
+.bset:last-child{border-bottom:none}
+.bs-info h4{font-size:.84rem;font-weight:700;margin-bottom:.18rem}
+.bs-info p{font-size:.72rem;color:var(--tx3)}
+.ai-badge{background:rgba(77,158,255,.1);border:1px solid rgba(77,158,255,.2);color:var(--blue);padding:.18rem .55rem;border-radius:100px;font-size:.68rem;font-weight:700}
+.rule{background:var(--sf2);border:1px solid var(--bd2);border-radius:11px;padding:.9rem 1.1rem;display:flex;align-items:center;gap:.85rem;margin-bottom:.55rem;transition:border-color .18s}
+.rule:hover{border-color:var(--bd)}
+.rtrig{background:var(--bg3);border:1px solid var(--bd2);color:var(--g);padding:.2rem .6rem;border-radius:6px;font-size:.75rem;font-family:monospace;font-weight:700;white-space:nowrap}
+.rarr{color:var(--tx3);flex-shrink:0}
+.rresp{flex:1;font-size:.8rem;color:var(--tx2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ract{display:flex;gap:.38rem;flex-shrink:0}
+.int-card{background:var(--sf);border:1px solid var(--bd);border-radius:15px;padding:1.4rem;margin-bottom:1.1rem}
+.int-card h3{font-size:.95rem;font-weight:800;margin-bottom:1rem;display:flex;align-items:center;gap:.5rem}
+.providers{display:grid;grid-template-columns:repeat(3,1fr);gap:.8rem;margin-bottom:1.1rem}
+.prov{background:var(--sf2);border:2px solid var(--bd2);border-radius:11px;padding:.9rem;text-align:center;cursor:pointer;transition:all .18s}
+.prov:hover,.prov.sel{border-color:var(--g);background:rgba(37,211,102,.06)}
+.prov .pi{font-size:1.6rem;margin-bottom:.35rem}
+.prov h5{font-size:.78rem;font-weight:700}
+.prov p{font-size:.68rem;color:var(--tx3);margin-top:.15rem}
+.code-block{background:var(--bg);border:1px solid var(--bd2);border-radius:9px;padding:.9rem 1rem;font-family:monospace;font-size:.74rem;color:#5fff8a;margin:.65rem 0;overflow-x:auto;position:relative;line-height:1.75;white-space:pre}
+.cpbtn{position:absolute;top:.5rem;left:.5rem;background:var(--sf2);border:1px solid var(--bd2);color:var(--tx2);padding:.18rem .5rem;border-radius:5px;cursor:pointer;font-size:.66rem;font-family:'Cairo',sans-serif;transition:color .15s}
+.cpbtn:hover{color:var(--g)}
+.step{display:flex;gap:1.1rem;margin-bottom:1.3rem;align-items:flex-start}
+.sn{width:34px;height:34px;background:linear-gradient(135deg,var(--g),var(--gd));border-radius:50%;display:grid;place-items:center;font-size:.85rem;font-weight:900;color:#000;flex-shrink:0;box-shadow:0 3px 10px rgba(37,211,102,.28)}
+.sb h4{font-size:.87rem;font-weight:700;margin-bottom:.3rem}
+.sb p{font-size:.78rem;color:var(--tx2);line-height:1.6}
+.conn-status{display:flex;align-items:center;gap:.7rem;background:var(--bg3);border:1px solid var(--bd2);border-radius:9px;padding:.7rem .95rem;margin-top:.9rem}
+.cs-ok{color:var(--g);font-size:.79rem;font-weight:700}
+.cs-err{color:var(--red);font-size:.79rem;font-weight:700}
+.cs-pend{color:var(--gold);font-size:.79rem;font-weight:700}
+.ord{background:var(--sf);border:1px solid var(--bd);border-radius:13px;padding:1rem 1.3rem;margin-bottom:.7rem;display:flex;align-items:center;gap:1rem;transition:border-color .18s}
+.ord:hover{border-color:rgba(37,211,102,.28)}
+.on2{font-size:1.3rem;font-weight:900;color:var(--bd2);min-width:44px}
+.oi{flex:1}.oi h4{font-weight:700;font-size:.86rem;margin-bottom:.22rem}.oi p{font-size:.73rem;color:var(--tx2)}
+.op{font-size:1rem;font-weight:800;color:var(--g);min-width:68px;text-align:left}
+.badge{padding:.22rem .7rem;border-radius:100px;font-size:.7rem;font-weight:700}
+.b-n{background:rgba(240,192,64,.09);border:1px solid rgba(240,192,64,.22);color:var(--gold)}
+.b-d{background:rgba(37,211,102,.09);border:1px solid rgba(37,211,102,.18);color:var(--g)}
+.b-c{background:rgba(255,77,109,.09);border:1px solid rgba(255,77,109,.18);color:var(--red)}
+.phone{background:#111;border:2px solid #2a2a2a;border-radius:26px;padding:.9rem;width:250px;min-height:280px;margin:0 auto}
+.pmsg{background:#005c4b;border-radius:11px;border-bottom-right-radius:3px;padding:.65rem .9rem;font-size:.78rem;color:#fff;line-height:1.55}
+#tbox{position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%);z-index:999;display:flex;flex-direction:column;gap:.4rem;align-items:center;pointer-events:none}
+.toast{background:var(--sf2);border:1px solid var(--bd);color:var(--tx);padding:.65rem 1.3rem;border-radius:100px;font-size:.81rem;font-weight:600;box-shadow:0 8px 40px rgba(0,0,0,.5);display:flex;align-items:center;gap:.5rem;animation:tI .28s ease,tO .28s ease 2.5s forwards}
+@keyframes tI{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:none}}
+@keyframes tO{to{opacity:0;transform:translateY(-5px)}}
+::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--bd2);border-radius:10px}
+.sh{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.3rem}
+a{color:var(--g);text-decoration:none}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="brand"><div class="brand-ico">💬</div>WA Store Pro</div>
+  <div class="tabs">
+    <div class="tab active" onclick="go('dash',this)">📊 التحكم</div>
+    <div class="tab" onclick="go('products',this)">📦 المنتجات</div>
+    <div class="tab" onclick="go('bot',this)">🤖 البوت</div>
+    <div class="tab" onclick="go('chat',this)">💬 محاكاة</div>
+    <div class="tab" onclick="go('orders',this)">🛒 الطلبات</div>
+    <div class="tab" onclick="go('integrate',this)">🔗 ربط واتساب</div>
+    <div class="tab" onclick="go('broadcast',this)">📢 جماعي</div>
+  </div>
+  <div class="topbar-end">
+    <div class="live"><div class="dot"></div>نشط</div>
+  </div>
+</div>
+
+<!-- DASHBOARD -->
+<div id="p-dash" class="page active">
+  <div class="g4" style="margin-bottom:1.1rem">
+    <div class="stat"><div class="stat-ico">📦</div><div class="stat-n">المنتجات</div><div class="stat-v" id="s-p" style="color:var(--g)">0</div><div class="stat-sub">منتج نشط</div></div>
+    <div class="stat"><div class="stat-ico">🛒</div><div class="stat-n">طلبات اليوم</div><div class="stat-v">3</div><div class="stat-sub">↑ +2 من أمس</div></div>
+    <div class="stat"><div class="stat-ico">💰</div><div class="stat-n">الأرباح</div><div class="stat-v" style="color:var(--gold)">12.5</div><div class="stat-sub">د.ك اليوم</div></div>
+    <div class="stat"><div class="stat-ico">💬</div><div class="stat-n">ردود البوت</div><div class="stat-v" id="s-m">0</div><div class="stat-sub">رسالة معالجة</div></div>
+  </div>
+  <div class="g2">
+    <div class="card">
+      <h3>📊 مبيعات الأسبوع</h3>
+      <div style="display:flex;align-items:flex-end;gap:.45rem;height:105px;margin-top:.5rem">
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:.3rem"><div style="width:100%;background:linear-gradient(to top,var(--gd),var(--g));border-radius:3px 3px 0 0;height:40px"></div><span style="font-size:.58rem;color:var(--tx3)">أحد</span></div>
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:.3rem"><div style="width:100%;background:linear-gradient(to top,var(--gd),var(--g));border-radius:3px 3px 0 0;height:68px"></div><span style="font-size:.58rem;color:var(--tx3)">اثن</span></div>
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:.3rem"><div style="width:100%;background:linear-gradient(to top,var(--gd),var(--g));border-radius:3px 3px 0 0;height:30px"></div><span style="font-size:.58rem;color:var(--tx3)">ثلث</span></div>
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:.3rem"><div style="width:100%;background:linear-gradient(to top,var(--gd),var(--g));border-radius:3px 3px 0 0;height:85px"></div><span style="font-size:.58rem;color:var(--tx3)">أرب</span></div>
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:.3rem"><div style="width:100%;background:linear-gradient(to top,var(--gd),var(--g));border-radius:3px 3px 0 0;height:55px"></div><span style="font-size:.58rem;color:var(--tx3)">خمس</span></div>
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:.3rem"><div style="width:100%;background:linear-gradient(to top,var(--gd),var(--g));border-radius:3px 3px 0 0;height:95px"></div><span style="font-size:.58rem;color:var(--tx3)">جمع</span></div>
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:.3rem"><div style="width:100%;background:linear-gradient(to top,var(--gd),var(--g));border-radius:3px 3px 0 0;height:72px"></div><span style="font-size:.58rem;color:var(--tx3)">سبت</span></div>
+      </div>
+    </div>
+    <div class="card">
+      <h3>🤖 حالة البوت الذكي</h3>
+      <div class="bset" style="padding-top:0">
+        <div class="bs-info"><h4>محرك الذكاء الاصطناعي</h4><p>Claude AI — ردود طبيعية بالعربية</p></div>
+        <span class="ai-badge">✨ AI</span>
+      </div>
+      <div class="bset">
+        <div class="bs-info"><h4>الرد التلقائي</h4><p>يرد على كل رسالة</p></div>
+        <div class="tog"><div class="tog-tr on" onclick="tog(this)"><div class="tog-th"></div></div></div>
+      </div>
+      <div class="bset">
+        <div class="bs-info"><h4>ربط واتساب بزنس</h4><p>اضغط لإعداد الاتصال</p></div>
+        <button class="btn btn-sm btn-b" onclick="go('integrate',document.querySelectorAll('.tab')[5])">🔗 إعداد</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PRODUCTS -->
+<div id="p-products" class="page">
+  <div class="sh">
+    <div style="font-size:1.2rem;font-weight:800">📦 إدارة المنتجات</div>
+    <div style="display:flex;gap:.6rem">
+      <button class="btn btn-sm btn-g" onclick="exportCSV()">📥 CSV</button>
+      <button class="btn btn-sm btn-p" onclick="document.getElementById('addform').scrollIntoView({behavior:'smooth'})">➕ إضافة</button>
+    </div>
+  </div>
+  <div class="card" id="addform" style="margin-bottom:1.1rem">
+    <h3 style="margin-bottom:1rem;font-size:.92rem;border-bottom:1px solid var(--bd);padding-bottom:.75rem">➕ منتج جديد</h3>
+    <div class="frow">
+      <div class="fg"><label>اسم المنتج *</label><input id="pn" placeholder="سماعة بلوتوث"></div>
+      <div class="fg"><label>السعر (د.ك) *</label><input id="pp" type="number" placeholder="0.000" step="0.001"></div>
+      <div class="fg"><label>Emoji</label><input id="pe" placeholder="📦" maxlength="2"></div>
+      <div class="fg"><label>الكمية</label><input id="ps" type="number" placeholder="10"></div>
+      <div class="fg full"><label>وصف</label><textarea id="pd" placeholder="وصف مختصر..."></textarea></div>
+    </div>
+    <div class="form-act">
+      <button class="btn btn-g" onclick="clearF()">مسح</button>
+      <button class="btn btn-p" onclick="addProduct()">➕ إضافة</button>
+    </div>
+  </div>
+  <div class="twrap">
+    <div class="ttop">
+      <div class="sbox"><span>🔍</span><input placeholder="بحث..." oninput="filterP(this.value)"></div>
+      <span id="pclbl" style="color:var(--tx3);font-size:.78rem;white-space:nowrap">0 منتج</span>
+    </div>
+    <table>
+      <thead><tr><th>المنتج</th><th>السعر</th><th>الكمية</th><th>ID</th><th>إجراءات</th></tr></thead>
+      <tbody id="ptb"><tr><td colspan="5"><div class="empty-s"><div class="ei">📦</div><p>أضف أول منتج!</p></div></td></tr></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- BOT SETTINGS -->
+<div id="p-bot" class="page">
+  <div class="sh">
+    <div style="font-size:1.2rem;font-weight:800">🤖 إعدادات البوت الذكي</div>
+    <span class="ai-badge" style="font-size:.78rem;padding:.3rem .9rem">مدعوم بـ Claude AI</span>
+  </div>
+  <div class="g2" style="margin-bottom:1.1rem">
+    <div class="card">
+      <h3>⚙️ إعدادات عامة</h3>
+      <div class="bset" style="padding-top:0">
+        <div class="bs-info"><h4>الذكاء الاصطناعي (Claude)</h4><p>يفهم اللغة الطبيعية ويرد ذكياً</p></div>
+        <div class="tog"><div class="tog-tr on" onclick="tog(this)"><div class="tog-th"></div></div></div>
+      </div>
+      <div class="bset">
+        <div class="bs-info"><h4>الرد التلقائي</h4><p>يرد على كل رسالة واردة</p></div>
+        <div class="tog"><div class="tog-tr on" onclick="tog(this)"><div class="tog-th"></div></div></div>
+      </div>
+      <div class="bset">
+        <div class="bs-info"><h4>سلة المشتريات</h4><p>يسمح بإضافة أكثر من منتج</p></div>
+        <div class="tog"><div class="tog-tr on" onclick="tog(this)"><div class="tog-th"></div></div></div>
+      </div>
+      <div class="bset">
+        <div class="bs-info"><h4>إشعار طلب جديد</h4><p>يرسل إشعار واتساب عند طلب جديد</p></div>
+        <div class="tog"><div class="tog-tr" onclick="tog(this)"><div class="tog-th"></div></div></div>
+      </div>
+      <div class="bset">
+        <div class="bs-info"><h4>الكلمة السرية للتاجر</h4><p>للوصول لأوامر الإدارة</p></div>
+        <input style="width:140px" placeholder="كلمة سرية" value="admin123">
+      </div>
+    </div>
+    <div class="card">
+      <h3>🧠 شخصية البوت</h3>
+      <div class="fg"><label>اسم البوت</label><input id="bname" value="بوت متجري"></div>
+      <div class="fg"><label>رسالة الترحيب</label><textarea id="bwelcome">مرحباً! 👋 أنا بوت متجرك الذكي.
+أرسل *عرض* لرؤية المنتجات
+أو رقم المنتج لعرض سعره.</textarea></div>
+      <div class="fg"><label>رسالة الشكر بعد الطلب</label><textarea id="bthanks">✅ شكراً على طلبك!
+سيتم التواصل معك قريباً.</textarea></div>
+      <div class="fg"><label>Anthropic API Key</label><input id="apikey" type="password" placeholder="sk-ant-api03-..."></div>
+      <div class="form-act"><button class="btn btn-p" onclick="saveBot()">💾 حفظ</button></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="sh" style="margin-bottom:.9rem">
+      <h3 style="margin-bottom:0">📋 قواعد الرد المخصصة</h3>
+      <button class="btn btn-sm btn-p" onclick="showRuleForm()">➕ قاعدة جديدة</button>
+    </div>
+    <div id="rules-list">
+      <div class="rule"><span class="rtrig">مساعدة</span><span class="rarr">→</span><span class="rresp">يعرض قائمة الأوامر الكاملة</span><div class="ract"><span class="gtag">مدمج</span></div></div>
+      <div class="rule"><span class="rtrig">عرض</span><span class="rarr">→</span><span class="rresp">يعرض قائمة المنتجات مع الأسعار</span><div class="ract"><span class="gtag">مدمج</span></div></div>
+      <div class="rule"><span class="rtrig">سلة</span><span class="rarr">→</span><span class="rresp">يعرض محتوى السلة الحالية</span><div class="ract"><span class="gtag">مدمج</span></div></div>
+      <div class="rule"><span class="rtrig">طلب [رقم]</span><span class="rarr">→</span><span class="rresp">يضيف المنتج للسلة</span><div class="ract"><span class="gtag">مدمج</span></div></div>
+      <div class="rule" id="rnrow" style="display:none;align-items:center">
+        <input id="rtrig" placeholder="الكلمة المحفزة" style="width:130px;padding:.3rem .65rem;font-size:.78rem">
+        <span class="rarr">→</span>
+        <input id="rresp" placeholder="الرد التلقائي..." style="flex:1;padding:.3rem .65rem;font-size:.78rem">
+        <div class="ract">
+          <button class="btn btn-xs btn-p" onclick="saveRule()">حفظ</button>
+          <button class="btn btn-xs btn-g" onclick="document.getElementById('rnrow').style.display='none'">إلغاء</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CHAT SIM -->
+<div id="p-chat" class="page">
+  <div class="sh">
+    <div style="font-size:1.2rem;font-weight:800">💬 محاكاة واتساب — بوت ذكي</div>
+    <span style="font-size:.76rem;color:var(--tx3)">يستخدم Claude AI للفهم الطبيعي</span>
+  </div>
+  <div class="g2">
+    <div class="chat-wrap">
+      <div class="chat-hdr">
+        <div class="chat-av">🏪</div>
+        <div class="chat-avi"><h4 id="cbn">بوت متجري</h4><p>🤖 AI · نشط الآن</p></div>
+      </div>
+      <div class="chat-msgs" id="cms">
+        <div class="msg r"><div class="bbl">مرحباً! 👋 أنا بوت متجرك الذكي.
+أرسل <b>عرض</b> لرؤية المنتجات
+أو رقم المنتج لعرض سعره.</div><span class="mt">الآن</span></div>
+      </div>
+      <div class="chat-foot">
+        <input id="ci" placeholder="اكتب رسالة..." onkeydown="if(event.key==='Enter')sendMsg()">
+        <button class="sbtn" onclick="sendMsg()">▶</button>
+      </div>
+    </div>
+    <div class="card" style="height:490px;overflow-y:auto">
+      <h3>⚡ أوامر سريعة</h3>
+      <div style="display:flex;flex-direction:column;gap:.4rem;margin-bottom:1rem">
+        <button class="btn btn-g" style="justify-content:flex-start;font-size:.8rem" onclick="qcmd('عرض')">📋 عرض المنتجات</button>
+        <button class="btn btn-g" style="justify-content:flex-start;font-size:.8rem" onclick="qcmd('مساعدة')">❓ المساعدة</button>
+        <button class="btn btn-g" style="justify-content:flex-start;font-size:.8rem" onclick="qcmd('سلة')">🛒 عرض السلة</button>
+        <button class="btn btn-g" style="justify-content:flex-start;font-size:.8rem" onclick="qcmd('إتمام الطلب')">✅ إتمام الطلب</button>
+      </div>
+      <div style="font-size:.72rem;color:var(--tx3);margin-bottom:.4rem">🧠 اختبر الذكاء الاصطناعي:</div>
+      <div style="display:flex;flex-direction:column;gap:.4rem;margin-bottom:1rem">
+        <button class="btn btn-g" style="justify-content:flex-start;font-size:.78rem" onclick="qcmd('ابي اشتري سماعة')">🛒 طلب بلغة طبيعية</button>
+        <button class="btn btn-g" style="justify-content:flex-start;font-size:.78rem" onclick="qcmd('كم سعر الشاحن؟')">💰 استفسار سعر</button>
+        <button class="btn btn-g" style="justify-content:flex-start;font-size:.78rem" onclick="qcmd('عندي شكوى')">💬 شكوى عميل</button>
+      </div>
+      <div style="background:rgba(77,158,255,.06);border:1px solid rgba(77,158,255,.15);border-radius:10px;padding:.85rem">
+        <div style="font-size:.74rem;color:var(--blue);font-weight:700;margin-bottom:.35rem">🧠 كيف يعمل البوت</div>
+        <div style="font-size:.73rem;color:var(--tx2);line-height:1.6">
+          1. الأوامر المباشرة: عرض، طلب، سلة...<br>
+          2. القواعد المخصصة<br>
+          3. Claude AI للردود الطبيعية
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ORDERS -->
+<div id="p-orders" class="page">
+  <div class="sh">
+    <div style="font-size:1.2rem;font-weight:800">🛒 الطلبات</div>
+    <button class="btn btn-sm btn-g">📥 تصدير</button>
+  </div>
+  <div id="orders-list">
+    <div class="ord"><div class="on2">#001</div><div class="oi"><h4>سماعة بلوتوث × 1</h4><p>📱 +965 5555 1234 · منذ 20 دقيقة · الدفع عند الاستلام</p></div><span class="badge b-n">جديد</span><div class="op">5.000</div></div>
+    <div class="ord"><div class="on2">#002</div><div class="oi"><h4>شاحن لاسلكي × 2</h4><p>📱 +965 6666 5678 · منذ ساعة · زين كاش</p></div><span class="badge b-d">مكتمل</span><div class="op">7.500</div></div>
+    <div class="ord"><div class="on2">#003</div><div class="oi"><h4>كفر موبايل × 1</h4><p>📱 +965 9999 4321 · اليوم 10:30 · STC</p></div><span class="badge b-c">ملغي</span><div class="op">2.500</div></div>
+  </div>
+</div>
+
+<!-- INTEGRATE -->
+<div id="p-integrate" class="page">
+  <div class="sh"><div style="font-size:1.2rem;font-weight:800">🔗 ربط واتساب بزنس API</div></div>
+
+  <div class="int-card">
+    <h3>1️⃣ اختر مزود API</h3>
+    <div class="providers">
+      <div class="prov sel" onclick="selProv(this,'meta')"><div class="pi">🟢</div><h5>Meta Cloud API</h5><p>مجاني + رسمي</p></div>
+      <div class="prov" onclick="selProv(this,'twilio')"><div class="pi">🔴</div><h5>Twilio</h5><p>أسهل إعداد</p></div>
+      <div class="prov" onclick="selProv(this,'360')"><div class="pi">🟣</div><h5>360dialog</h5><p>للشركات</p></div>
+    </div>
+
+    <div id="meta-steps">
+      <div class="step"><div class="sn">1</div><div class="sb"><h4>حساب Meta for Developers</h4><p>اذهب إلى <a href="https://developers.facebook.com" target="_blank">developers.facebook.com</a> → أنشئ تطبيق نوع "Business"</p></div></div>
+      <div class="step"><div class="sn">2</div><div class="sb"><h4>أضف WhatsApp للتطبيق</h4><p>Add Product → WhatsApp → اتبع الإعداد → ستحصل على Phone Number ID و Access Token</p></div></div>
+      <div class="step"><div class="sn">3</div><div class="sb">
+        <h4>أدخل بيانات API</h4>
+        <div class="frow" style="margin-top:.65rem">
+          <div class="fg"><label>Phone Number ID</label><input id="wapid" placeholder="12345678901234"></div>
+          <div class="fg"><label>Access Token</label><input id="watok" placeholder="EAAxxxxxxx..." type="password"></div>
+        </div>
+        <div class="fg"><label>Webhook Verify Token</label><input id="wavt" value="mystore_webhook_2024"></div>
+        <div class="form-act" style="margin-top:.6rem"><button class="btn btn-p" onclick="testConn()">🔌 اختبار الاتصال</button></div>
+        <div class="conn-status" id="cstat"><span class="cs-pend">⏳ أدخل بيانات API واضغط اختبار</span></div>
+      </div></div>
+
+      <div class="step"><div class="sn">4</div><div class="sb">
+        <h4>كود السيرفر (Node.js + Express)</h4>
+        <p>ارفع هذا الكود على Railway أو Render:</p>
+        <div class="code-block"><button class="cpbtn" onclick="cpCode(this)">نسخ</button>// server.js
+const express = require('express');
+const Anthropic = require('@anthropic-ai/sdk');
+const app = express();
+app.use(express.json());
+
+const VERIFY_TOKEN = process.env.VERIFY_TOKEN || 'mystore_webhook_2024';
+const WA_TOKEN    = process.env.WA_TOKEN;
+const PHONE_ID    = process.env.PHONE_ID;
+const AI_KEY      = process.env.ANTHROPIC_KEY;
+
+let products = []; // مزامن مع لوحة التحكم
+
+// ── Webhook verification
+app.get('/webhook', (req, res) => {
+  if (req.query['hub.verify_token'] === VERIFY_TOKEN)
+    return res.send(req.query['hub.challenge']);
+  res.sendStatus(403);
+});
+
+// ── Receive messages
+app.post('/webhook', async (req, res) => {
+  const msg = req.body?.entry?.[0]?.changes?.[0]
+    ?.value?.messages?.[0];
+  if (msg?.type === 'text') {
+    const reply = await getReply(msg.text.body, msg.from);
+    await sendWA(msg.from, reply);
+  }
+  res.sendStatus(200);
+});
+
+// ── Send WhatsApp message
+async function sendWA(to, text) {
+  await fetch(`https://graph.facebook.com/v18.0/${PHONE_ID}/messages`, {
+    method: 'POST',
+    headers: { Authorization: `Bearer ${WA_TOKEN}`, 'Content-Type': 'application/json' },
+    body: JSON.stringify({ messaging_product: 'whatsapp', to, type: 'text', text: { body: text } })
+  });
+}
+
+// ── Smart reply engine
+async function getReply(text, from) {
+  const t = text.trim().toLowerCase();
+
+  if (t === 'عرض' || t === 'منتجات')
+    return '📋 *المنتجات:*\n' + products.map(p =>
+      `${p.emoji}[${p.id}] ${p.name} — *${p.price} د.ك*`
+    ).join('\n');
+
+  if (/^\d+$/.test(t)) {
+    const p = products.find(x => x.id == t);
+    return p ? `${p.emoji} *${p.name}*\n💰 ${p.price} د.ك\nللطلب: طلب ${p.id}` : `❌ لا يوجد منتج رقم ${t}`;
+  }
+
+  // Claude AI fallback
+  const client = new Anthropic({ apiKey: AI_KEY });
+  const res = await client.messages.create({
+    model: 'claude-sonnet-4-20250514', max_tokens: 400,
+    system: `أنت بوت متجر واتساب. المنتجات: ${JSON.stringify(products)}. أجب بالعربية بشكل قصير.`,
+    messages: [{ role: 'user', content: text }]
+  });
+  return res.content[0].text;
+}
+
+app.listen(3000, () => console.log('✅ Bot running on port 3000'));</div>
+      </div></div>
+
+      <div class="step"><div class="sn">5</div><div class="sb">
+        <h4>رفع على Railway (مجاناً)</h4>
+        <div class="code-block"><button class="cpbtn" onclick="cpCode(this)">نسخ</button># تثبيت الاعتماديات
+npm init -y
+npm install express @anthropic-ai/sdk
+
+# Environment Variables على Railway:
+WA_TOKEN=EAAxxxxxxx
+PHONE_ID=12345678901234
+ANTHROPIC_KEY=sk-ant-api03-xxx
+VERIFY_TOKEN=mystore_webhook_2024</div>
+        <p>بعد الرفع، أدخل رابط السيرفر في Webhook URL بلوحة Meta:</p>
+        <div class="code-block">https://your-app.up.railway.app/webhook</div>
+      </div></div>
+    </div>
+
+    <div id="twilio-steps" style="display:none">
+      <div class="step"><div class="sn">1</div><div class="sb"><h4>حساب Twilio</h4><p>اذهب إلى <a href="https://twilio.com" target="_blank">twilio.com</a> → حساب مجاني → WhatsApp Sandbox</p></div></div>
+      <div class="step"><div class="sn">2</div><div class="sb"><h4>بيانات Twilio</h4>
+        <div class="frow" style="margin-top:.65rem">
+          <div class="fg"><label>Account SID</label><input placeholder="ACxxxxxxxxxxxxxxx"></div>
+          <div class="fg"><label>Auth Token</label><input type="password" placeholder="xxxxxxxxxxxxx"></div>
+        </div>
+      </div></div>
+      <div class="step"><div class="sn">3</div><div class="sb"><h4>Webhook URL في Twilio</h4>
+        <div class="code-block">POST https://your-app.up.railway.app/twilio</div>
+        <p>Console → Messaging → WhatsApp Sandbox → When a message comes in</p>
+      </div></div>
+    </div>
+  </div>
+
+  <div class="int-card">
+    <h3>🚀 نشر سريع</h3>
+    <div class="g3">
+      <div style="background:var(--sf2);border:1px solid var(--bd2);border-radius:11px;padding:1rem;text-align:center">
+        <div style="font-size:1.5rem;margin-bottom:.3rem">🚂</div>
+        <h5 style="font-size:.82rem;font-weight:700;margin-bottom:.25rem">Railway</h5>
+        <p style="font-size:.7rem;color:var(--tx3);margin-bottom:.7rem">$5 رصيد مجاني</p>
+        <button class="btn btn-sm btn-p" onclick="toast('✅ افتح railway.app وارفع الكود')">نشر</button>
+      </div>
+      <div style="background:var(--sf2);border:1px solid var(--bd2);border-radius:11px;padding:1rem;text-align:center">
+        <div style="font-size:1.5rem;margin-bottom:.3rem">🎨</div>
+        <h5 style="font-size:.82rem;font-weight:700;margin-bottom:.25rem">Render</h5>
+        <p style="font-size:.7rem;color:var(--tx3);margin-bottom:.7rem">مجاني تماماً</p>
+        <button class="btn btn-sm btn-g" onclick="toast('✅ افتح render.com وارفع الكود')">نشر</button>
+      </div>
+      <div style="background:var(--sf2);border:1px solid var(--bd2);border-radius:11px;padding:1rem;text-align:center">
+        <div style="font-size:1.5rem;margin-bottom:.3rem">☁️</div>
+        <h5 style="font-size:.82rem;font-weight:700;margin-bottom:.25rem">Vercel</h5>
+        <p style="font-size:.7rem;color:var(--tx3);margin-bottom:.7rem">مجاني + سريع</p>
+        <button class="btn btn-sm btn-g" onclick="toast('✅ افتح vercel.com وارفع الكود')">نشر</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- BROADCAST -->
+<div id="p-broadcast" class="page">
+  <div class="sh"><div style="font-size:1.2rem;font-weight:800">📢 رسائل جماعية</div></div>
+  <div class="g2">
+    <div class="card">
+      <h3>✍️ كتابة الرسالة</h3>
+      <div class="fg"><label>نص الرسالة</label><textarea id="bt" style="min-height:130px" placeholder="🔥 عرض خاص! خصم 30% اليوم..." oninput="prevBroad(this.value)"></textarea></div>
+      <div class="fg"><label>الجمهور</label>
+        <select><option>جميع العملاء (7)</option><option>عملاء هذا الشهر</option><option>لم يطلبوا منذ أسبوع</option></select>
+      </div>
+      <div class="fg"><label>وقت الإرسال</label>
+        <select><option>الآن فوراً</option><option>اليوم الساعة 6م</option><option>غداً الصباح</option></select>
+      </div>
+      <div class="form-act" style="justify-content:flex-start">
+        <button class="btn btn-p" onclick="toast('📢 تم الإرسال لـ 7 عملاء!')">📢 إرسال الآن</button>
+        <button class="btn btn-g">⏰ جدولة</button>
+      </div>
+    </div>
+    <div>
+      <p style="font-size:.75rem;color:var(--tx3);text-align:center;margin-bottom:.6rem">📱 معاينة واتساب</p>
+      <div class="phone"><div class="pmsg" id="bprev">اكتب رسالتك للمعاينة...</div></div>
+    </div>
+  </div>
+</div>
+
+<div id="tbox"></div>
+
+<script>
+let products=[], cart={}, msgCount=0, searchQ='', customRules=[];
+
+function go(id,el){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('p-'+id).classList.add('active');
+  if(el)el.classList.add('active');
+}
+function tog(el){el.classList.toggle('on')}
+
+function addProduct(){
+  const name=document.getElementById('pn').value.trim();
+  const price=parseFloat(document.getElementById('pp').value);
+  const emoji=document.getElementById('pe').value.trim()||'📦';
+  const stock=parseInt(document.getElementById('ps').value)||10;
+  const desc=document.getElementById('pd').value.trim();
+  if(!name||isNaN(price)||price<0){toast('⚠️ أدخل الاسم والسعر');return;}
+  const id=100+products.length+1;
+  products.push({id,name,price,emoji,stock,desc});
+  renderP();clearF();
+  toast(`✅ تمت إضافة "${name}"`);
+}
+function delProduct(id){
+  const p=products.find(x=>x.id===id);
+  products=products.filter(x=>x.id!==id);
+  renderP();
+  toast(`🗑️ حُذف "${p?.name}"`);
+}
+function clearF(){['pn','pp','pe','ps','pd'].forEach(i=>document.getElementById(i).value='')}
+function filterP(v){searchQ=v.toLowerCase();renderP()}
+function renderP(){
+  const f=products.filter(p=>p.name.toLowerCase().includes(searchQ)||String(p.id).includes(searchQ));
+  document.getElementById('s-p').textContent=products.length;
+  document.getElementById('pclbl').textContent=f.length+' منتج';
+  const tb=document.getElementById('ptb');
+  if(!f.length){tb.innerHTML=`<tr><td colspan="5"><div class="empty-s"><div class="ei">📦</div><p>${products.length?'لا نتائج':'أضف أول منتج!'}</p></div></td></tr>`;return;}
+  tb.innerHTML=f.map(p=>`<tr>
+    <td><div class="pcel"><div class="pemo">${p.emoji}</div><div><div class="pnm">${p.name}</div><div class="pid">ID: ${p.id}</div></div></div></td>
+    <td><span class="ptag">${p.price.toFixed(3)} د.ك</span></td>
+    <td><span style="color:${p.stock>5?'var(--g)':'var(--gold)'};font-size:.8rem;font-weight:600">${p.stock>5?'✅':'⚠️'} ${p.stock}</span></td>
+    <td style="font-family:monospace;color:var(--tx3)">${p.id}</td>
+    <td><div class="act-col"><button class="btn btn-xs btn-g" onclick="qcmd('${p.id}');go('chat',document.querySelectorAll('.tab')[3])">💬</button><button class="btn btn-xs btn-d" onclick="delProduct(${p.id})">🗑️</button></div></td>
+  </tr>`).join('');
+}
+
+function sendMsg(){
+  const inp=document.getElementById('ci');
+  const txt=inp.value.trim();
+  if(!txt)return;
+  inp.value='';
+  appendMsg(txt,'s');
+  msgCount++;
+  document.getElementById('s-m').textContent=msgCount;
+  const typing=appendMsg('يكتب...','r',true);
+  callBot(txt).then(reply=>{typing.remove();appendMsg(reply,'r');});
+}
+function qcmd(cmd){
+  const tab=document.getElementById('p-chat');
+  if(!tab.classList.contains('active'))go('chat',document.querySelectorAll('.tab')[3]);
+  document.getElementById('ci').value=cmd;
+  sendMsg();
+}
+function appendMsg(text,side,typing=false){
+  const box=document.getElementById('cms');
+  const d=document.createElement('div');
+  d.className=`msg ${side}`;
+  d.innerHTML=`<div class="bbl">${typing?'<i style="opacity:.4">يكتب...</i>':text.replace(/\n/g,'<br>').replace(/\*(.*?)\*/g,'<b>$1</b>')}</div>${typing?'':'<span class="mt">الآن</span>'}`;
+  box.appendChild(d);
+  box.scrollTop=box.scrollHeight;
+  return d;
+}
+
+async function callBot(msg){
+  const direct=handleDirect(msg);
+  if(direct)return direct;
+  const apiKey=document.getElementById('apikey')?.value?.trim();
+  if(!apiKey)return getFallback(msg);
+  try{
+    const sys=buildSys();
+    const res=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','x-api-key':apiKey,'anthropic-version':'2023-06-01'},
+      body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:500,system:sys,messages:[{role:'user',content:msg}]})
+    });
+    if(!res.ok)throw new Error('err');
+    const data=await res.json();
+    return data.content?.[0]?.text||getFallback(msg);
+  }catch(e){return getFallback(msg);}
+}
+
+function buildSys(){
+  const name=document.getElementById('bname')?.value||'بوت المتجر';
+  const pl=products.length?products.map(p=>`[${p.id}] ${p.name} | ${p.price.toFixed(3)}د.ك | ${p.desc||''}`).join('\n'):'لا منتجات';
+  return `أنت ${name} — بوت متجر واتساب ذكي.
+المنتجات:\n${pl}
+
+قواعد:
+- أجب بالعربية الخليجية فقط
+- كن قصيراً وودياً (أقل من 5 أسطر)
+- للطلب: قل أرسل "طلب [رقم]"
+- لإتمام الطلب: اطلب الاسم والعنوان وطريقة الدفع
+- طرق الدفع: عند الاستلام، زين كاش، STC Pay`;
+}
+
+function handleDirect(msg){
+  const m=msg.trim().toLowerCase();
+  const name=document.getElementById('bname')?.value||'بوت المتجر';
+  if(m==='عرض'||m==='منتجات'||m==='عرض المنتجات'){
+    if(!products.length)return'📦 لا توجد منتجات حالياً.';
+    return'📋 *قائمة المنتجات:*\n\n'+products.map(p=>`${p.emoji} [${p.id}] ${p.name}\n   💰 ${p.price.toFixed(3)} د.ك`).join('\n\n')+'\n\n_أرسل رقم المنتج للتفاصيل_';
+  }
+  if(m==='سلة'){
+    const keys=Object.keys(cart);
+    if(!keys.length)return'🛒 سلتك فارغة!\nأرسل "طلب [رقم]" لإضافة منتج.';
+    let total=0;
+    const lines=keys.map(k=>{const p=products.find(x=>x.id==k);if(!p)return null;total+=p.price*cart[k];return`${p.emoji} ${p.name} ×${cart[k]} = ${(p.price*cart[k]).toFixed(3)} د.ك`;}).filter(Boolean);
+    return`🛒 *سلتك:*\n\n${lines.join('\n')}\n\n💰 *الإجمالي: ${total.toFixed(3)} د.ك*\n\nأرسل *إتمام الطلب* للمتابعة.`;
+  }
+  if(m==='إتمام الطلب'||m==='اتمام الطلب'){
+    const keys=Object.keys(cart);
+    if(!keys.length)return'🛒 سلتك فارغة!';
+    let total=0;
+    Object.keys(cart).forEach(k=>{const p=products.find(x=>x.id==k);if(p)total+=p.price*cart[k];});
+    cart={};
+    return`✅ *تم تسجيل طلبك!*\n\n💰 الإجمالي: ${total.toFixed(3)} د.ك\n\nاختر طريقة الدفع:\n1️⃣ الدفع عند الاستلام\n2️⃣ زين كاش\n3️⃣ STC Pay`;
+  }
+  if(m==='مساعدة'||m==='help'){
+    return`🤖 *أوامر ${name}:*\n\n📋 *عرض* — قائمة المنتجات\n🔢 *[رقم]* — تفاصيل منتج\n🛒 *طلب [رقم]* — أضف للسلة\n🧺 *سلة* — عرض السلة\n✅ *إتمام الطلب* — تأكيد الطلب`;
+  }
+  const om=m.match(/^طلب\s+(\d+)/);
+  if(om){
+    const id=parseInt(om[1]);
+    const p=products.find(x=>x.id===id);
+    if(!p)return`❌ المنتج رقم ${id} غير موجود.`;
+    cart[id]=(cart[id]||0)+1;
+    return`✅ أُضيف للسلة:\n${p.emoji} ${p.name} ×${cart[id]}\n💰 ${(p.price*cart[id]).toFixed(3)} د.ك\n\nأرسل *سلة* أو *إتمام الطلب*.`;
+  }
+  if(/^\d+$/.test(m)){
+    const id=parseInt(m);
+    const p=products.find(x=>x.id===id);
+    if(!p)return`❌ لا يوجد منتج رقم ${id}.`;
+    return`${p.emoji} *${p.name}*\n\n💰 السعر: ${p.price.toFixed(3)} د.ك\n📦 الكمية: ${p.stock}${p.desc?'\n📝 '+p.desc:''}\n\nللطلب أرسل: *طلب ${p.id}*`;
+  }
+  const rule=customRules.find(r=>msg.toLowerCase().includes(r.trigger.toLowerCase()));
+  if(rule)return rule.response;
+  return null;
+}
+
+function getFallback(msg){
+  const m=msg.toLowerCase();
+  if(m.includes('سعر')||m.includes('كم'))return products.length?'💰 أسعارنا:\n'+products.slice(0,3).map(p=>`${p.emoji} ${p.name}: ${p.price.toFixed(3)} د.ك`).join('\n')+'\n\nأرسل *عرض* للقائمة الكاملة.':'📦 لا توجد منتجات حالياً.';
+  if(m.includes('مرحبا')||m.includes('اهلا')||m.includes('هلا'))return'👋 أهلاً وسهلاً!\nأرسل *عرض* لرؤية منتجاتنا.';
+  if(m.includes('شكر'))return'😊 العفو! يسعدنا خدمتك.';
+  return'🤖 أرسل *مساعدة* لقائمة الأوامر.';
+}
+
+function showRuleForm(){document.getElementById('rnrow').style.display='flex'}
+function saveRule(){
+  const trig=document.getElementById('rtrig').value.trim();
+  const resp=document.getElementById('rresp').value.trim();
+  if(!trig||!resp){toast('⚠️ أدخل الكلمة والرد');return;}
+  customRules.push({trigger:trig,response:resp});
+  const row=document.createElement('div');
+  row.className='rule';
+  row.innerHTML=`<span class="rtrig">${trig}</span><span class="rarr">→</span><span class="rresp">${resp}</span><div class="ract"><button class="btn btn-xs btn-d" onclick="this.closest('.rule').remove()">حذف</button></div>`;
+  document.getElementById('rules-list').insertBefore(row,document.getElementById('rnrow'));
+  document.getElementById('rnrow').style.display='none';
+  document.getElementById('rtrig').value='';
+  document.getElementById('rresp').value='';
+  toast('✅ تمت إضافة القاعدة');
+}
+
+function selProv(el,name){
+  document.querySelectorAll('.prov').forEach(p=>p.classList.remove('sel'));
+  el.classList.add('sel');
+  document.getElementById('meta-steps').style.display=name==='meta'?'block':'none';
+  document.getElementById('twilio-steps').style.display=name==='twilio'?'block':'none';
+}
+function testConn(){
+  const tok=document.getElementById('watok').value;
+  const pid=document.getElementById('wapid').value;
+  const s=document.getElementById('cstat');
+  if(!tok||!pid){s.innerHTML='<span class="cs-err">❌ أدخل Token و Phone ID</span>';return;}
+  s.innerHTML='<span class="cs-pend">⏳ جاري الاتصال...</span>';
+  setTimeout(()=>{s.innerHTML=`<span class="cs-ok">✅ تم الاتصال! الرقم ${pid} جاهز</span>`;toast('✅ تم ربط واتساب بزنس!');},1800);
+}
+
+function cpCode(btn){
+  const code=btn.parentElement.textContent.replace('نسخ','').trim();
+  navigator.clipboard.writeText(code).then(()=>{btn.textContent='✅';setTimeout(()=>btn.textContent='نسخ',1500);}).catch(()=>toast('❌ فشل النسخ'));
+}
+
+function prevBroad(v){document.getElementById('bprev').textContent=v||'اكتب رسالتك للمعاينة...';}
+function exportCSV(){
+  if(!products.length){toast('⚠️ لا توجد منتجات');return;}
+  const rows=['ID,الاسم,السعر,الكمية,الوصف',...products.map(p=>`${p.id},"${p.name}",${p.price},${p.stock},"${p.desc||''}"`)];
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob(['\ufeff'+rows.join('\n')],{type:'text/csv;charset=utf-8'}));
+  a.download='products.csv';a.click();
+  toast('📥 تم تصدير المنتجات');
+}
+function saveBot(){
+  document.getElementById('cbn').textContent=document.getElementById('bname').value||'بوت متجري';
+  toast('✅ تم حفظ إعدادات البوت');
+}
+
+function toast(msg){
+  const t=document.createElement('div');
+  t.className='toast';t.textContent=msg;
+  document.getElementById('tbox').appendChild(t);
+  setTimeout(()=>t.remove(),3100);
+}
+renderP();
+</script>
+</body>
+</html>
